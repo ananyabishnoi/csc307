@@ -1,0 +1,33 @@
+{
+  "name": "express-backend",
+  "version": "1.0.0",
+  "description": "backend",
+  "type": "module",
+  "main": "backend.js",
+"scripts": {
+  "test": "echo \"Error: no test specified\" && exit 1",
+  "dev": "nodemon backend.js",
+  "start": "node backend.js"
+},
+
+
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ananyabishnoi/csc307-react-app.git"
+  },
+  "keywords": [
+    "backend"
+  ],
+  "author": "Ananya Bishnoi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ananyabishnoi/csc307-react-app/issues"
+  },
+  "homepage": "https://github.com/ananyabishnoi/csc307-react-app#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
