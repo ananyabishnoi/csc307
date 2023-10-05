@@ -4,13 +4,11 @@
   "description": "backend",
   "type": "module",
   "main": "backend.js",
-"scripts": {
-  "test": "echo \"Error: no test specified\" && exit 1",
-  "dev": "nodemon backend.js",
-  "start": "node backend.js"
-},
-
-
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon backend.js",
+    "start": "node backend.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ananyabishnoi/csc307-react-app.git"
@@ -25,6 +23,7 @@
   },
   "homepage": "https://github.com/ananyabishnoi/csc307-react-app#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.18.2"
   },
   "devDependencies": {
