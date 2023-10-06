@@ -1,10 +1,7 @@
-// src/MyApp.jsb
 import React, {useState, useEffect} from 'react';
 import Table from './Table';
 import Form from './Form';
 import axios from 'axios';
-
-
 
 
 
@@ -18,12 +15,12 @@ useEffect(() => {
 async function fetchAll(){
    try {
       const response = await axios.get('http://localhost:8000/users');
-      return response.data.users_list;     
+      return response.data.users_list;    
       }
    catch (error){
       //We're not handling errors. Just logging into the console.
-      console.log(error); 
-      return false;         
+      console.log(error);
+      return false;        
     }
   }
 
@@ -41,27 +38,28 @@ async function makePostCall(person){
 const [characters, setCharacters] = useState([]);
  
 
-	function removeOneCharacter (index) {
-	    const updated = characters.filter((character, i) => {
-	        return i !== index
-	    });
-	  setCharacters(updated);
-	}
+function removeOneCharacter (index) {
+   const updated = characters.filter((character, i) => {
+       return i !== index
+   });
+ setCharacters(updated);
+}
 // src/MyApp.js (a new function inside the MyApp function)
-function updateList(person) { 
+function updateList(person) {
    makePostCall(person).then( result => {
-   if (result && result.status === 200)
-      setCharacters([...characters, person] );
+   if (result && result.status === 201)
+      setCharacters([...characters, result.data]);
    });
 }
 return (
     <div className="container">
-        <Table characterData={characters} 
-	        removeCharacter={removeOneCharacter} />
-	<Form handleSubmit={updateList} />
+        <Table characterData={characters}
+       removeCharacter={removeOneCharacter} />
+<Form handleSubmit={updateList} />
 
     </div>  
 )
 
 }
 export default MyApp;
+
