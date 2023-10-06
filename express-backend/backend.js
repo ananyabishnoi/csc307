@@ -1,5 +1,3 @@
-// backend.js
-
 import express from "express";
 import cors from 'cors';
 
@@ -9,31 +7,31 @@ const port = 8000;
 app.use(cors());
 app.use(express.json());
 
-const users = { 
+const users = {
    users_list :
    [
-      { 
+      {
          id : 'xyz789',
          name : 'Charlie',
          job: 'Janitor',
       },
       {
-         id : 'abc123', 
+         id : 'abc123',
          name: 'Mac',
          job: 'Bouncer',
       },
       {
-         id : 'ppp222', 
+         id : 'ppp222',
          name: 'Mac',
          job: 'Professor',
-      }, 
+      },
       {
-         id: 'yat999', 
+         id: 'yat999',
          name: 'Dee',
          job: 'Aspring actress',
       },
       {
-         id: 'zap555', 
+         id: 'zap555',
          name: 'Dennis',
          job: 'Bartender',
       }
@@ -56,31 +54,20 @@ function findUserById(id) {
 }
 
 
-app.get('/users', (req, res) => {
-    const name = req.query.name;
-    if (name != undefined){
-        let result = findUserByName(name);
-        result = {users_list: result};
-        res.send(result);
-    }
-    else{
-        res.send(users);
-    }
-});
 
-const findUserByName = (name) => { 
-    return users['users_list'].filter( (user) => user['name'] === name); 
+const findUserByName = (name) => {
+    return users['users_list'].filter( (user) => user['name'] === name);
 }
 
 app.delete('/users/:id', (req, res) => {
     const id = req.params['id'];
     const index = users['users_list'].findIndex(user => user['id'] === id);
     if (index !== -1){
-	deleteUser(index);
-	res.status(200).end();
+deleteUser(index);
+res.status(200).end();
 }
     else{
-	res.status(404).send('Resource not found.');
+res.status(404).send('Resource not found.');
 }});
 
 function deleteUser(index) {
@@ -88,14 +75,32 @@ function deleteUser(index) {
 }
 
 app.get('/users', (req, res) => {
+    const name = req.query.name;
     const job = req.query.job;
-    if (job !== undefined) {
+
+    if (name !== undefined && job !== undefined) {
+        // Find users matching both name and job
+        let result = findUsersByNameAndJob(name, job);
+        result = { users_list: result };
+        res.send(result);
+    } else if (name !== undefined) {
+        // Find users matching only the name
+        let result = findUserByName(name);
+        result = { users_list: result };
+        res.send(result);
+    } else if (job !== undefined) {
+        // Find users matching only the job
         let result = findUserByJob(job);
         res.send({ users_list: result });
     } else {
+        // Return all users if no filters are applied
         res.send(users);
     }
 });
+
+const findUsersByNameAndJob = (name, job) => {
+    return users['users_list'].filter((user) => user['name'] === name && user['job'] === job);
+}
 
 const findUserByJob = (job) => {
     return users['users_list'].filter((user) => user['job'] === job);
@@ -103,15 +108,18 @@ const findUserByJob = (job) => {
 app.post('/users', (req, res) => {
     const userToAdd = req.body;
     addUser(userToAdd);
-    res.status(200).end();
+    res.status(201).send(userToAdd);
 });
 
-function addUser(user){
+
+function addUser(user) {
+    user.id = generateRandomID();
     users['users_list'].push(user);
 }
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
 });  
 
-
-    
+function generateRandomID(length = 6) {
+    return Math.random().toString(36).substr(2, length);
+}
