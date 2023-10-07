@@ -50,9 +50,7 @@ app.get('/users/:id', (req, res) => {
 
 function findUserById(id) {
     return users['users_list'].find( (user) => user['id'] === id); // or line below
-    //return users['users_list'].filter( (user) => user['id'] === id);
 }
-
 
 
 const findUserByName = (name) => {
@@ -62,38 +60,35 @@ const findUserByName = (name) => {
 app.delete('/users/:id', (req, res) => {
     const id = req.params['id'];
     const index = users['users_list'].findIndex(user => user['id'] === id);
-    if (index !== -1){
-deleteUser(index);
-res.status(200).end();
-}
-    else{
-res.status(404).send('Resource not found.');
-}});
+    if (index !== -1) {
+        deleteUser(index);
+        res.status(204).end(); 
+    } else {
+        res.status(404).send('Resource not found.');
+    }
+});
 
 function deleteUser(index) {
      users['users_list'].splice(index, 1);
 }
+
 
 app.get('/users', (req, res) => {
     const name = req.query.name;
     const job = req.query.job;
 
     if (name !== undefined && job !== undefined) {
-        // Find users matching both name and job
         let result = findUsersByNameAndJob(name, job);
         result = { users_list: result };
         res.send(result);
     } else if (name !== undefined) {
-        // Find users matching only the name
         let result = findUserByName(name);
         result = { users_list: result };
         res.send(result);
     } else if (job !== undefined) {
-        // Find users matching only the job
         let result = findUserByJob(job);
         res.send({ users_list: result });
     } else {
-        // Return all users if no filters are applied
         res.send(users);
     }
 });
@@ -102,13 +97,14 @@ const findUsersByNameAndJob = (name, job) => {
     return users['users_list'].filter((user) => user['name'] === name && user['job'] === job);
 }
 
+
 const findUserByJob = (job) => {
     return users['users_list'].filter((user) => user['job'] === job);
 }
 app.post('/users', (req, res) => {
     const userToAdd = req.body;
     addUser(userToAdd);
-    res.status(201).send(userToAdd);
+    res.status(201).json({user:userToAdd});
 });
 
 
