@@ -18,7 +18,6 @@ async function fetchAll(){
       return response.data.users_list;    
       }
    catch (error){
-      //We're not handling errors. Just logging into the console.
       console.log(error);
       return false;        
     }
@@ -34,21 +33,33 @@ async function makePostCall(person){
       return false;
    }
 }
-// src/MyApp.js (empty state)
+
 const [characters, setCharacters] = useState([]);
  
 
-function removeOneCharacter (index) {
-   const updated = characters.filter((character, i) => {
-       return i !== index
-   });
- setCharacters(updated);
+function removeOneCharacter(index) {
+   const userToDelete = characters[index];
+   if(userToDelete && userToDelete.id) {
+      axios.delete(`http://localhost:8000/users/${userToDelete.id}`)
+      .then(response => {
+         if (response.status === 204) {
+            const updated = characters.filter((character, i) => {
+               return i !== index;
+            });
+            setCharacters(updated);
+         }
+      })
+      .catch(error => {
+         console.log(error);
+      });
+   }
 }
-// src/MyApp.js (a new function inside the MyApp function)
+
+
 function updateList(person) {
    makePostCall(person).then( result => {
    if (result && result.status === 201)
-      setCharacters([...characters, result.data]);
+      setCharacters([...characters, result.data.user]);
    });
 }
 return (
@@ -62,4 +73,3 @@ return (
 
 }
 export default MyApp;
-
